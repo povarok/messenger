@@ -2,7 +2,7 @@ $(function () {
 
     Parse.$ = jQuery;
     Parse.serverURL = "https://pg-app-ae2ym6gds1wddidtsydys97dwtryhv.scalabl.cloud/1/";
-    Parse.initialize("mo33TVQ1g7F71UwmrXc64ExDQjOj9OPkSUEWT5i7","5XHK2sMNkkDbnswmMmQ07qtaPj7Ea4RiOORWU9lT");
+    Parse.initialize("mo33TVQ1g7F71UwmrXc64ExDQjOj9OPkSUEWT5i7", "5XHK2sMNkkDbnswmMmQ07qtaPj7Ea4RiOORWU9lT");
 
     Parse.User.enableUnsafeCurrentUser()
     var currentUser = Parse.User.current();
@@ -14,12 +14,22 @@ $(function () {
     username = Parse.User.current().get("username");
     document.getElementById("username").innerText = username;
 
-    //img = Parse.User.current().f
+    var img = Parse.User.current().get("avatar");
+    document.getElementById("user_image").src = img.url();
+
+    // var anotherQuery = new Parse.Query(img);
+    // anotherQuery.equalTo("username", username);
+    // anotherQuery.find({
+    //     success: function (msg) {
+    //         var file = msg[0].get("avatar");
+    //         document.getElementById("user_image").src = file.url();
+    //     }
+    // });
 
     //document.getElementById("user_image").src = img;
 
 
-    
+
     function logout() {
         //alert("logout working");
         window.location.href = "login.html";
@@ -27,15 +37,15 @@ $(function () {
 
         Parse.User.logOut().then(() => {
             var currentUser = Parse.User.current();  // this will now be null
-            
+
         });
-        
+
     }
     // эта функция почему то вызывается сразу при переходе на страницу
     //document.getElementById('logout1').addEventListener('click', logout1());
     document.getElementById('logout').onclick = logout;
-    
-    
+
+
     // var btn = document.createElement("BUTTON");        // Create a <button> element
     // var t = document.createTextNode("CLICK ME");       // Create a text node
     // btn.appendChild(t);        
@@ -54,53 +64,53 @@ $(function () {
 
         var dateQuery = new Parse.Query(Chat);
         //equalTo("title", "I'm Hungry");
-        dateQuery.equalTo("sender",username);
+        dateQuery.equalTo("sender", username);
         dateQuery.descending("updatedAt");
         dateQuery.limit(50);
         //console.log("dsf" + dateQuery.include("sender"));
         dateQuery.find({
             success: function (msg) {
-                
+
                 var msgArray = msg;
                 for (let i = 0; i < msg.length; i++) {
                     //console.log()
                     //msg[i].get("text") = "changed";
-                    console.log("msg[i].get() "+msg[i]);
+                    console.log("msg[i].get() " + msg[i]);
                     // if (msg[i].get("sender") == username) {
 
-                        var p = document.createElement("p");
-                        p.className = "shoutbox-comment";
-                        //Здесь будет цикл, но его пока нету:)
-                        var li = document.createElement("li");
-                        var span = document.createElement("span")
-                        span.className = "shoutbox-username";
-                        li.className = "liClass";
-                        li.onclick = function (params) {
-                            console.log("click working");
-                            window.location.href = "chat.html?Recipient=" + msg[i].get("recipient");
-                        }
-                        var liText = document.createTextNode(msg[i].get("recipient"));
-                        span.appendChild(liText);
-                        //last_msg = msg[i].get("messages")[msg[i].get("messages").length["text"]]
-                        console.log(msg[i].get("messages")[msg[i].get("messages").length - 1]["text"]);
-
-                        var pText = document.createTextNode(msg[i].get("messages")[msg[i].get("messages").length - 1]["text"]);
-                        p.appendChild(pText);
-
-                        var spanDate = document.createElement("span");
-                        spanDate.className = "shoutbox-comment-ago";
-                        var dateText = document.createTextNode(msg[i].get("updatedAt"));
-                        spanDate.appendChild(dateText);
-
-                        li.appendChild(span);
-                        li.appendChild(p);
-                        li.appendChild(spanDate);
-
-                        articleDiv.appendChild(li);
+                    var p = document.createElement("p");
+                    p.className = "shoutbox-comment";
+                    //Здесь будет цикл, но его пока нету:)
+                    var li = document.createElement("li");
+                    var span = document.createElement("span")
+                    span.className = "shoutbox-username";
+                    li.className = "liClass";
+                    li.onclick = function (params) {
+                        console.log("click working");
+                        window.location.href = "chat.html?Recipient=" + msg[i].get("recipient");
                     }
-                }
+                    var liText = document.createTextNode(msg[i].get("recipient"));
+                    span.appendChild(liText);
+                    //last_msg = msg[i].get("messages")[msg[i].get("messages").length["text"]]
+                    console.log(msg[i].get("messages")[msg[i].get("messages").length - 1]["text"]);
 
-            
+                    var pText = document.createTextNode(msg[i].get("messages")[msg[i].get("messages").length - 1]["text"]);
+                    p.appendChild(pText);
+
+                    var spanDate = document.createElement("span");
+                    spanDate.className = "shoutbox-comment-ago";
+                    var dateText = document.createTextNode(msg[i].get("updatedAt"));
+                    spanDate.appendChild(dateText);
+
+                    li.appendChild(span);
+                    li.appendChild(p);
+                    li.appendChild(spanDate);
+
+                    articleDiv.appendChild(li);
+                }
+            }
+
+
         });
 
 
