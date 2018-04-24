@@ -82,6 +82,7 @@ $(function () {
                     p.className = "shoutbox-comment";
                     //Здесь будет цикл, но его пока нету:)
                     var li = document.createElement("li");
+                    // li.onmouseenter="style"
                     var span = document.createElement("span")
                     span.className = "shoutbox-username";
                     li.className = "liClass";
