@@ -21,8 +21,21 @@ body{
     left: 30%;
 }
 
+.msg_form {
+    background-color:  #18cf30;
+    color:  #49a151;
+}
 
-
+.about {
+    display:inline-block;
+    float:left;
+    margin:0 10px;
+   }
+.btn-back {
+    float:left;
+    margin:0 10px;
+    margin-top: 12px;
+}
 
 h1 {
     background-color:  #87bfef;
@@ -117,7 +130,7 @@ h1 img {
 
 h2 {
     position: relative;
-    background-color:  #f9fafb;
+    background-color:  #29c584;
     border-bottom: 2px solid #e2e8eb;
     max-width: 70%;
     height: 45px;

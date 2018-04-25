@@ -41,42 +41,81 @@ document.getElementById("sender").innerText = sender;
 document.getElementById("recipient").innerText = recipient;
 
 document.getElementById("msg_send").onclick = msg_send;
+document.getElementById("to_main").onclick = function () {
+    console.log("click working");
+    window.location.href = "main.html"
+}
 
-function msg_send() {
-    var text = document.getElementById("msg_text").value;
-    console.log("до " + text);
+document.getElementById("add_recipient").onclick = confirm_recipient;
 
-    var Chat = Parse.Object.extend("Chat");
-    var dateQuery = new Parse.Query(Chat);
-    dateQuery.equalTo("sender",sender);
-    dateQuery.equalTo("recipient",recipient);
-    dateQuery.find({
-        success: function (msg) {
-                //console.log(msg[0].get("sender"));
-                var arr = msg[0].get("messages");
-                console.log("после " + text);
-                arr.push({"text": text,"date":new Date()})
-                msg[0].set("messages",arr);
-                msg[0].save();
-    
-                
-    
-                
-            
+function confirm_recipient() {
+    var text = document.getElementById("recipient_input").value;
+    if (text != "") {
+
+        //var check_user = Parse.Object.extend("User");
+        //console.log(check_user);
+
+        //var dateQuery = new Parse.Query(check_user);
+        //var dateQuery = new Parse.User.
+
+        var query = new Parse.Query(Parse.User);
+        query.equalTo("username", text);  // find all the women
+        query.find({
+          success: function(checked_usr) {
+            //console.log("women.length" + women.length);
+            if (checked_usr.length != 0 ){
+                recipient = text;
+                document.getElementById("recipient").innerText = recipient;
+                document.getElementById("recipient_input").value = "";
+                recipient = text;
+                document.getElementById("recipient").innerText = recipient;
             }
-    
-        
-    });
-    
-    //console.log("форма работает" + document.getElementById("msg_text").value);
-    document.getElementById("msg_text").value = "";
+            else {
+                alert("такого пользователя не существует");
+            }
+          }, 
+          error: function(error) {
+            
+            console.log("Error: " + error.code + " " + error.message);}
+        });
 
+        
+    }
 
 }
 
+
+function msg_send() {
+    var text = document.getElementById("msg_text").value;
+    if (text != "") {
+        console.log("Отправляем");
+
+        var Chat = Parse.Object.extend("Chat");
+        var dateQuery = new Parse.Query(Chat);
+        dateQuery.equalTo("sender", sender);
+        dateQuery.equalTo("recipient", recipient);
+        dateQuery.find({
+            success: function (msg) {
+                //console.log(msg[0].get("sender"));
+                var arr = msg[0].get("messages");
+                //console.log("после " + text);
+                arr.push({ "text": text, "date": new Date() })
+                msg[0].set("messages", arr);
+                msg[0].save();
+            }
+        });
+
+        //console.log("форма работает" + document.getElementById("msg_text").value);
+        document.getElementById("msg_text").value = "";
+    }
+    else{
+        console.log("Введите текст сообщения");
+    }
+}
+
 // $('.msg_form').on('submit', function (e) {
-    
-    
+
+
 //     console.log("форма работает");
 
 

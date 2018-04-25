@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,20 +9,43 @@
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/main.css">
 </head>
+
 <body>
+       
+    <form class="msg_form">
+        <input class="btn-back btn btn-primary" type="button" id="to_main" value="Назад">
+        <h1>From:
+            <span id="sender"></span>
+            <h1>
+                <div>
+                        <div class="about">
+                <input class="form-control" type="text" id="recipient_input" placeholder="Enter username. . .">
+            </div><div class="about">
+                <input class="btn btn-primary" type="button" id="add_recipient" value="Да">
+            </div>
+            </div>
+                <h1>To:
+                    <span id="recipient"></span>
+                    <h1>
 
-        <form  class="msg_form">
-            <h1>From: <span id="sender"></span>    <h1>
+                        <div>
+                            <div class="about">
+                                <input class="form-control" type="text" id="msg_text" placeholder="Enter your message. . ."> </div>
+                            <div class="about">
+                                <input class="btn btn-primary" type="button" id="msg_send" value="Отправить">
+                            </div>
+                        </div>
 
-            <h1>To: <span id="recipient"></span>    <h1>
+    </form>
 
-            <input type="text"  id = "msg_text">
-            <input class="btn btn-primary" type="button" id ="msg_send" value="Отправить">
-        </form >
-        
-        
+
+
+
+
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="js/parse.js"></script>
     <script src="js/chat.js"></script>
 </body>
+
 </html>

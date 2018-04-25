@@ -15,8 +15,21 @@ $(function () {
     document.getElementById("username").innerText = username;
 
     var img = Parse.User.current().get("avatar");
-    document.getElementById("user_image").src = img.url();
+    console.log("img - " + img);
+    if (img != undefined) {
+        document.getElementById("user_image").src = img.url();
+    }
+    document.getElementById("user_image").style.height = "68px";
+    document.getElementById("user_image").style.width = "68px";
+    document.getElementById("user_image").style.marginRight = "430px";
+    document.getElementById("user_image").style.marginTop = "1px";
+    document.getElementById("user_image").style.zIndex = 2;
 
+    
+    document.getElementById("new_dialog").onclick = function () {
+        //console.log("click working");
+        window.location.href = "chat.html";
+    }
     // var anotherQuery = new Parse.Query(img);
     // anotherQuery.equalTo("username", username);
     // anotherQuery.find({
