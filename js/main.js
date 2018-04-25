@@ -21,9 +21,11 @@ $(function () {
     }
     document.getElementById("user_image").style.height = "68px";
     document.getElementById("user_image").style.width = "68px";
-    document.getElementById("user_image").style.marginRight = "430px";
+    document.getElementById("user_image").style.marginRight = "470px";
     document.getElementById("user_image").style.marginTop = "1px";
     document.getElementById("user_image").style.zIndex = 2;
+    document.getElementById("logout").style.marginRight = "50px";
+    document.getElementById("search").style.marginRight = "60px";
 
     
     document.getElementById("new_dialog").onclick = function () {
@@ -54,8 +56,7 @@ $(function () {
         });
 
     }
-    // эта функция почему то вызывается сразу при переходе на страницу
-    //document.getElementById('logout1').addEventListener('click', logout1());
+    
     document.getElementById('logout').onclick = logout;
 
 
@@ -73,8 +74,8 @@ $(function () {
         //Основной элемент для заполнения
         var articleDiv = document.querySelector("ul.shoutbox-content");
 
-
-
+       // console.log("objectId" + Parse.User.current().get("objectId"));
+       // console.log("ACL - "+Parse.User.current().get("ACL"));
         var dateQuery = new Parse.Query(Chat);
         //equalTo("title", "I'm Hungry");
         dateQuery.equalTo("sender", username);
@@ -113,7 +114,13 @@ $(function () {
 
                     var spanDate = document.createElement("span");
                     spanDate.className = "shoutbox-comment-ago";
-                    var dateText = document.createTextNode(msg[i].get("updatedAt"));
+                    var options = {
+                         year: "numeric", month: "short",
+                        day: "numeric", hour: "2-digit", minute: "2-digit"
+                    };
+                    var dateText = document.createTextNode(msg[i].get("updatedAt").toLocaleTimeString("en-us", options));
+                    //dateText = dateText.slice(0,25);
+                    console.log(dateText);
                     spanDate.appendChild(dateText);
 
                     li.appendChild(span);

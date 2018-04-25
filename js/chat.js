@@ -88,7 +88,7 @@ function confirm_recipient() {
 function msg_send() {
     var text = document.getElementById("msg_text").value;
     if (text != "") {
-        console.log("Отправляем");
+        console.log("Отправляем раз");
 
         var Chat = Parse.Object.extend("Chat");
         var dateQuery = new Parse.Query(Chat);
@@ -99,11 +99,27 @@ function msg_send() {
                 //console.log(msg[0].get("sender"));
                 var arr = msg[0].get("messages");
                 //console.log("после " + text);
-                arr.push({ "text": text, "date": new Date() })
+                arr.push({ "text": text, "date": new Date(),"author":sender })
                 msg[0].set("messages", arr);
                 msg[0].save();
             }
         });
+
+        dateQuery = new Parse.Query(Chat);
+        dateQuery.equalTo("sender", recipient);
+        dateQuery.equalTo("recipient", sender);
+        dateQuery.find({
+            success: function (msg) {
+                //console.log(msg[0].get("sender"));
+                var arr = msg[0].get("messages");
+                //console.log("после " + text);
+                arr.push({ "text": text, "date": new Date(),"author":sender })
+                msg[0].set("messages", arr);
+                msg[0].save();
+            }
+        });
+
+        
 
         //console.log("форма работает" + document.getElementById("msg_text").value);
         document.getElementById("msg_text").value = "";

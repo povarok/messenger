@@ -1,5 +1,5 @@
 $(function() {
-    
+    alert("shf,jnftn");
     Parse.$ = jQuery;
     Parse.serverURL="https://pg-app-ae2ym6gds1wddidtsydys97dwtryhv.scalabl.cloud/1/";
     //ApplicationID, JavaScriptKey 

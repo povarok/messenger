@@ -28,20 +28,29 @@ body{
 
 .about {
     display:inline-block;
-    float:left;
+    float:right;
     margin:0 10px;
    }
-.btn-back {
+.btn {
     float:left;
     margin:0 10px;
-    margin-top: 12px;
+    background-color: #5f8155;
+    outline-color: #5f8155;
+    border-color: #5f8155;
 }
 
+.btn-fix {
+    float: right;
+    margin-left: 450px;
+}
+
+
 h1 {
-    background-color:  #87bfef;
+    background-color:  #7cb36c;
     box-shadow: 0px 1px 1px 0.00px rgba(158, 70, 70, 0.1);
-    width: 75%;
+    width: 100%;
     position: relative;
+    vertical-align: top;
     height: 46px;
     text-align: center;
     margin: auto;
@@ -67,7 +76,7 @@ h1 img {
     width: 100%;
     margin: 0;
     padding: 0;
-    color:  #df377a;
+    color:  #ffffff;
     font-size: 14px;
     font-weight: 700;
     text-align: left;
@@ -75,12 +84,12 @@ h1 img {
 
 .shoutbox-content li {
     padding: 20px;
-    border-bottom: 1px solid #d5dbe1;
+    border-bottom: 1px solid #ffffff;
 }
 
 .shoutbox-username {
     display: inline;
-    color:  #df377a;
+    color:  #ffffff;
     font-size: 14px;
     font-weight: bold;
     text-align: left;
@@ -89,7 +98,7 @@ h1 img {
 
 .shoutbox-comment {
     display: inline;
-    color:  #717c87;
+    color:  #ffffff;
     font-size: 14px;
     font-weight: 400;
     line-height: 21px;
@@ -117,7 +126,7 @@ h1 img {
 .shoutbox-comment-ago {
     display: inline-block;
     float: right;
-    color:  #9aa1a7;
+    color:  #ffffff;
     font-size: 11px;
     font-weight: normal;
     line-height: 20px;
@@ -130,14 +139,14 @@ h1 img {
 
 h2 {
     position: relative;
-    background-color:  #29c584;
+    background-color:  #e4e01f;
     border-bottom: 2px solid #e2e8eb;
     max-width: 70%;
     height: 45px;
     margin: auto;
     align-content: center;
     text-align: center;
-    color:  #df377a;
+    color:  #000000;
     font-size: 14px;
     font-weight: bold;
     line-height: 45px;
@@ -156,10 +165,14 @@ h2 span {
     z-index: 20px;
 }
 
+.shoutbox{
+    background-color:  #7cb36c;
+}
+
 .shoutbox-form form {
     display: none;
-    background-color:  #f9fafb;
-    box-shadow: 0px 2px 0px 0.00px #e2e8eb;
+    background-color:  #ffffff;
+    box-shadow: 0px 2px 0px 0.00px #ffffff;
     max-width: 100%;
     text-align: left;
     padding: 20px 20px 30px;
@@ -186,7 +199,7 @@ h2 span {
     display: inline-block;
     background-color: #ffffff;
     box-shadow: 1px 3px 0px 0.00px rgba(0, 0, 0, 0.04);
-    border: 1px solid #bfcdda;
+    border: 1px solid #ffffff;
     outline: none;
     max-width: 170px;
     width: 100%;
@@ -202,7 +215,7 @@ h2 span {
 .shoutbox-form form #shoutbox-comment {
     background-color: #ffffff;
     box-shadow: 1px 3px 0px 0.00px rgba(0, 0, 0, 0.04);
-    border: 1px solid #bfcdda;
+    border: 1px solid #ffffff;
     outline: none;
     max-width: 320px;
     width: 100%;
