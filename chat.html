@@ -13,40 +13,51 @@
 <body>
 
     <form class="msg_form">
-           
-                    <input class="" type="button" id="to_main" value="Назад">
-                
+
+        <input class="" type="button" id="to_main" value="Назад">
+
         <h1>From:
-                
-                    
+
+
             <span id="sender"></span>
-           
+
             <h1>
                 <div>
-                        
+
                     <div class="about">
                         <input class="btn btn-primary" type="button" id="add_recipient" value="Да">
                     </div>
                     <div class="about">
                         <input class="form-control" type="text" id="recipient_input" placeholder="Enter username. . .">
                     </div>
-                   
+
                 </div>
                 <h1>To:
                     <span id="recipient"></span>
                     <h1>
 
                         <div>
-                            
-                            <div class="about" >
+
+                            <div class="about">
                                 <input class="btn btn-primary" type="button" id="msg_send" value="Отправить">
                             </div>
                             <div class="about">
-                                    <input class="form-control" type="text" id="msg_text" placeholder="Enter your message. . .">
-                                 </div>
+                                <input class="form-control" type="text" id="msg_text" placeholder="Enter your message. . .">
+                            </div>
                         </div>
+                    </h1>
+                </h1>
+            </h1>
+        </h1>
 
     </form>
+
+    <div class="shoutbox">
+
+        <h2>messages with </h2>
+        <!--Сюда чаты и последние сообщения-->
+        <ul class="shoutbox-content" id="chat-container"></ul>
+    </div>
 
 
 

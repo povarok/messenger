@@ -27,11 +27,22 @@ $(function () {
     document.getElementById("logout").style.marginRight = "50px";
     document.getElementById("search").style.marginRight = "60px";
 
-    
-    document.getElementById("new_dialog").onclick = function () {
-        //console.log("click working");
-        window.location.href = "chat.html";
+
+// starts new chat with recipient entered in "search" input
+    document.getElementById("new_dialog").onclick = function (params) {
+        var usr = document.getElementById("search").value;
+        if (usr !=""){
+        
+        //console.log("usr - " + usr);
+        window.location.href = "chat.html?Recipient=" + usr;
+        }
     }
+
+    
+    // document.getElementById("new_dialog").onclick = function () {
+    //     //console.log("click working");
+    //     window.location.href = "chat.html";
+    // }
     // var anotherQuery = new Parse.Query(img);
     // anotherQuery.equalTo("username", username);
     // anotherQuery.find({
@@ -101,7 +112,7 @@ $(function () {
                     span.className = "shoutbox-username";
                     li.className = "liClass";
                     li.onclick = function (params) {
-                        console.log("click working");
+                        //console.log("click working");
                         window.location.href = "chat.html?Recipient=" + msg[i].get("recipient");
                     }
                     var liText = document.createTextNode(msg[i].get("recipient"));
