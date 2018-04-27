@@ -1,5 +1,5 @@
 $(function() {
-    alert("shf,jnftn");
+    //alert("shf,jnftn");
     Parse.$ = jQuery;
     Parse.serverURL="https://pg-app-ae2ym6gds1wddidtsydys97dwtryhv.scalabl.cloud/1/";
     //ApplicationID, JavaScriptKey 
@@ -7,6 +7,25 @@ $(function() {
         "mo33TVQ1g7F71UwmrXc64ExDQjOj9OPkSUEWT5i7",
         "5XHK2sMNkkDbnswmMmQ07qtaPj7Ea4RiOORWU9lT"
       );
+
+
+      document.getElementById("registration").onclick = function () {
+        var username = document.getElementById("usr").value;
+        var pass = document.getElementById("pass").value;
+        
+        var Users = Parse.Object.extend("User");
+        var user = new Users();
+        user.set("username", username);
+        user.set("password", pass);
+        user.save(null,{
+            success: function (user) {
+                alert("Успешная регистрация");
+            },
+            error: function (user, error) {
+                alert("Такой пользователь уже существует");
+            }
+        });
+    }  
  
     $('.form-signin').on('submit', function(e) {
  

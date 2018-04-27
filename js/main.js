@@ -27,18 +27,109 @@ $(function () {
     document.getElementById("logout").style.marginRight = "50px";
     document.getElementById("search").style.marginRight = "60px";
 
+    // document.getElementById("search").addEventListener("change", function() {
+    //     console.log("search changed");
+    // });
+    // function alert(){
+    //     alert("gggggg");
+    // }
 
-// starts new chat with recipient entered in "search" input
+
+    // $('html').click(function(){
+    // 	$('#search_advice_wrapper').hide();
+    // });
+
+    // $('.advice_variant').live('click',function(){
+    // 	// ставим текст в input поиска
+    // 	$('#search_box').val($(this).text());
+    // 	// прячем слой подсказки
+    // 	$('#search_advice_wrapper').fadeOut(350).html('');
+    // });
+
+    // если кликаем в любом месте сайта, нужно спрятать подсказку
+
+    document.getElementById("search").onclick = function () {
+        //console.log("click");
+        document.getElementById("search_advice_wrapper").style.visibility = 'visible';
+    }
+
+    document.getElementById("search").oninput = function () {
+
+        $("#search_advice_wrapper").html("").show();
+        append_advice()
+    }
+
+
+    function append_advice() {
+        //document.getElementById("search_advice_wrapper").style.visibility = 'visible'; 
+        entered_text = document.getElementById("search").value;
+        if (entered_text.length > 0) {
+            var reg = new RegExp(entered_text, "i")
+
+            var Users = Parse.Object.extend("User");
+            var dateQuery = new Parse.Query(Users);
+
+            console.log("append_advice");
+
+            dateQuery.find({
+                success: function (usr) {
+                    console.log("append_advice searched sth usr.length - " + usr.length);
+                    for (let i = 0; i < usr.length; i++) {
+                        console.log("usr[i] - " + usr[i]);
+                        var uName = usr[i].get("username");
+                        console.log("uName - " + uName);
+                        if (uName.match(reg) != null) {
+                            $('#search_advice_wrapper').append('<div class="advice_variant">' + uName + '</div>');
+                        }
+                    }
+                    var elems = document.getElementsByClassName("advice_variant");
+                    console.log("elems - " + elems + " elems.length " + elems.length);
+                    for (i = 0; i < elems.length; i++) {
+
+                        elems[i].onclick = function () {
+                            text = this.innerText;
+                            document.getElementById("search").value = text;
+                            console.log("ckick" + text);
+                            //reg = null;
+
+                            document.getElementById("search_advice_wrapper").style.visibility = 'hidden';
+                            $("#search_advice_wrapper").html("").show();
+
+
+                        }
+
+
+                    }
+
+                }
+
+            });
+
+        }
+
+
+
+        // for (i=0;i< tst_arr.length;i++){
+        //     if (tst_arr[i].match( reg ) != null){
+        //         $('#search_advice_wrapper').append('<div class="">'+tst_arr[i]+'</div>');
+        //     }
+
+        // }
+
+    }
+
+
+    // starts new chat with recipient entered in "search" input
     document.getElementById("new_dialog").onclick = function (params) {
         var usr = document.getElementById("search").value;
-        if (usr !=""){
-        
-        //console.log("usr - " + usr);
-        window.location.href = "chat.html?Recipient=" + usr;
+        if (usr != "") {
+
+            //console.log("usr - " + usr);
+            window.location.href = "chat.html?Recipient=" + usr;
         }
     }
 
-    
+
     // document.getElementById("new_dialog").onclick = function () {
     //     //console.log("click working");
     //     window.location.href = "chat.html";
@@ -67,7 +158,7 @@ $(function () {
         });
 
     }
-    
+
     document.getElementById('logout').onclick = logout;
 
 
@@ -79,29 +170,23 @@ $(function () {
     // }                       // Append the text to <button>
     // document.body.appendChild(btn); 
 
-
     function getAllChats() {
-        var Chat = Parse.Object.extend("Chat");
+
         //Основной элемент для заполнения
         var articleDiv = document.querySelector("ul.shoutbox-content");
+        articleDiv.innerHTML = "";
 
-       // console.log("objectId" + Parse.User.current().get("objectId"));
-       // console.log("ACL - "+Parse.User.current().get("ACL"));
+        var Chat = Parse.Object.extend("Chat");
         var dateQuery = new Parse.Query(Chat);
-        //equalTo("title", "I'm Hungry");
         dateQuery.equalTo("sender", username);
         dateQuery.descending("updatedAt");
         dateQuery.limit(50);
-        //console.log("dsf" + dateQuery.include("sender"));
         dateQuery.find({
             success: function (msg) {
 
-                var msgArray = msg;
                 for (let i = 0; i < msg.length; i++) {
-                    //console.log()
-                    //msg[i].get("text") = "changed";
                     console.log("msg[i].get() " + msg[i]);
-                    // if (msg[i].get("sender") == username) {
+
 
                     var p = document.createElement("p");
                     p.className = "shoutbox-comment";
@@ -112,12 +197,12 @@ $(function () {
                     span.className = "shoutbox-username";
                     li.className = "liClass";
                     li.onclick = function (params) {
-                        //console.log("click working");
+
                         window.location.href = "chat.html?Recipient=" + msg[i].get("recipient");
                     }
                     var liText = document.createTextNode(msg[i].get("recipient"));
                     span.appendChild(liText);
-                    //last_msg = msg[i].get("messages")[msg[i].get("messages").length["text"]]
+
                     console.log(msg[i].get("messages")[msg[i].get("messages").length - 1]["text"]);
 
                     var pText = document.createTextNode(msg[i].get("messages")[msg[i].get("messages").length - 1]["text"]);
@@ -126,11 +211,11 @@ $(function () {
                     var spanDate = document.createElement("span");
                     spanDate.className = "shoutbox-comment-ago";
                     var options = {
-                         year: "numeric", month: "short",
+                        year: "numeric", month: "short",
                         day: "numeric", hour: "2-digit", minute: "2-digit"
                     };
                     var dateText = document.createTextNode(msg[i].get("updatedAt").toLocaleTimeString("en-us", options));
-                    //dateText = dateText.slice(0,25);
+
                     console.log(dateText);
                     spanDate.appendChild(dateText);
 
@@ -144,6 +229,16 @@ $(function () {
 
 
         });
+    }
+// выставляем обновление диалогов раз в минуту
+    function interval() {
+        setInterval(
+            getAllChats
+            , 60000);
+
+
+
+
 
 
         // var mod = document.querySelectorAll('.liClass');
@@ -167,6 +262,8 @@ $(function () {
         //     '</li>');
     }
     getAllChats();
+
+    interval();
 
     //Пример добавления и получения данных
     // var Chat = Parse.Object.extend("Chat");

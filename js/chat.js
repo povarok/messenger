@@ -26,8 +26,10 @@ function parseUrlQuery() {
 
 
 
-sender = Parse.User.current().get("username");
-recipient = parseUrlQuery()['Recipient'];
+var sender = Parse.User.current().get("username");
+var recipient = parseUrlQuery()['Recipient'];
+var msgBuffer = 0;
+
 console.log("Current user: " + sender + "\nRecipient: " + recipient);
 
 
@@ -65,6 +67,18 @@ document.getElementById("to_main").onclick = function () {
     console.log("click working");
     window.location.href = "main.html"
 }
+
+var img = Parse.User.current().get("avatar");
+console.log("img - " + img);
+if (img != undefined) {
+    document.getElementById("user_image").src = img.url();
+}
+document.getElementById("user_image").style.height = "68px";
+document.getElementById("user_image").style.width = "68px";
+document.getElementById("user_image").style.marginRight = "470px";
+document.getElementById("user_image").style.marginTop = "1px";
+document.getElementById("user_image").style.zIndex = 2;
+
 
 document.getElementById("add_recipient").onclick = confirm_recipient;
 
@@ -106,53 +120,93 @@ function confirm_recipient() {
 }
 
 
+
+
 function msg_send() {
     var text = document.getElementById("msg_text").value;
+    var options = {
+        year: "numeric", month: "short",
+        day: "numeric", hour: "2-digit", minute: "2-digit"
+    };
     if (text != "") {
-        console.log("Отправляем раз");
-
+        console.log("Отправляем сообщение");
+        // в чат отправитель/получатель
+  
         var Chat = Parse.Object.extend("Chat");
         var dateQuery = new Parse.Query(Chat);
         dateQuery.equalTo("sender", sender);
         dateQuery.equalTo("recipient", recipient);
         dateQuery.find({
             success: function (msg) {
-                //console.log(msg[0].get("sender"));
+                console.log("msg.length - " + msg.length);
+                if (msg.length == 0) {
+                    var Chat = Parse.Object.extend("Chat");
+                    var dateQuery = new Chat();
+                    dateQuery.set("sender", sender);
+                    dateQuery.set("recipient", recipient);
+                    dateQuery.save(null, {
+                        success: function (user) {
+                            console.log("диалог создан")
+                            
+                            messages = [{ "text": text, "date": new Date().toLocaleTimeString("en-us", options), "author": sender }]
+                            user.set("messages", messages);
+                            user.save();
+            
+                        },
+                        error: function (user, error) {
+                            alert("Такой диалог уже существует");
+                        }
+                    });
+                }
                 var arr = msg[0].get("messages");
                 //console.log("после " + text);
-                arr.push({ "text": text, "date": new Date(), "author": sender })
+                arr.push({ "text": text, "date": new Date().toLocaleTimeString("en-us", options), "author": sender })
                 msg[0].set("messages", arr);
                 msg[0].save();
             }
         });
-
+        if (recipient != sender) {
+        // в чат получатель / отправитель
         dateQuery = new Parse.Query(Chat);
         dateQuery.equalTo("sender", recipient);
         dateQuery.equalTo("recipient", sender);
         dateQuery.find({
             success: function (msg) {
-                //console.log(msg[0].get("sender"));
+                if (msg.length == 0) {
+                    var Chat = Parse.Object.extend("Chat");
+                    var dateQuery = new Chat();
+                    dateQuery.set("sender", recipient);
+                    dateQuery.set("recipient", sender);
+                    dateQuery.save(null, {
+                        success: function (user) {
+                            console.log("диалог создан")
+                            messages = [{ "text": text, "date": new Date().toLocaleTimeString("en-us", options), "author": sender }]
+                            user.set("messages", messages);
+                            user.save();
+                        },
+                        error: function (user, error) {
+                            alert("Такой диалог уже существует");
+                        }
+                    });
+                }
                 var arr = msg[0].get("messages");
-                //console.log("после " + text);
-                arr.push({ "text": text, "date": new Date(), "author": sender })
+                arr.push({ "text": text, "date": new Date().toLocaleTimeString("en-us", options), "author": sender })
                 msg[0].set("messages", arr);
                 msg[0].save();
             }
-        });
+        });}
 
-
-
-        //console.log("форма работает" + document.getElementById("msg_text").value);
         document.getElementById("msg_text").value = "";
     }
     else {
         console.log("Введите текст сообщения");
+        alert("Введите текст сообщения");
     }
 }
 
 var Chat = Parse.Object.extend("Chat");
 var dateQuery = new Parse.Query(Chat);
-//var msgArr = []
+
 
 sender = Parse.User.current().get("username");
 recipient = parseUrlQuery()['Recipient'];
@@ -164,10 +218,11 @@ dateQuery.equalTo("sender", sender);
 dateQuery.equalTo("recipient", recipient);
 dateQuery.find({
     success: function (msg) {
-        
+
 
         msgArr = msg[0].get("messages");
-        console.log("начинаем вывод сообщений с  " + recipient +" кол-во сообщений - "+ msgArr.length);
+        msgBuffer = msgArr.length;
+        console.log("начинаем вывод сообщений с  " + recipient + " кол-во сообщений - " + msgArr.length);
         for (let i = 0; i < msgArr.length; i++) {
 
             console.log("cообщение - " + i);
@@ -195,7 +250,7 @@ dateQuery.find({
 
             var spanDate = document.createElement("span");
             spanDate.className = "shoutbox-comment-ago";
-            
+
             //var dateText = document.createTextNode(msgArr[i]["date"].toLocaleTimeString("en-us", options)); //
             var dateText = document.createTextNode(msgArr[i]["date"]);
             //var dateText = document.createTextNode("дата");
@@ -209,12 +264,77 @@ dateQuery.find({
 
             articleDiv.appendChild(li);
         }
-        //console.log("после " + text);
 
     }
 });
 
+//обновляем список сообщений раз в 5 секунд
 
+function interval() {
+    setInterval(function () {
+        var Chat = Parse.Object.extend("Chat");
+        var query = new Parse.Query(Chat);
+
+
+        console.log("sender - " + sender + "recipient - " + recipient);
+
+        query.equalTo("sender", sender);
+        query.equalTo("recipient", recipient);
+
+        query.find({
+            success: function (msg) {
+
+                var array = msg[0].get("messages");
+                console.log("array len" + array.length)
+                if (array.length != msgBuffer) {
+                    console.log("Зашел в иф");
+                    var articleDiv = document.querySelector("ul.shoutbox-content");
+                    for (let i = msgBuffer; i < array.length; i++) {
+                        var text = array[i]["text"];
+                        var author = array[i]["author"];
+                        var date = array[i]["date"];
+
+                        var p = document.createElement("p");
+                        p.className = "shoutbox-comment";
+
+                        var li = document.createElement("li");
+                        var span = document.createElement("span")
+                        span.className = "shoutbox-username";
+                        li.className = "liClass";
+                        li.onclick = function () {
+                            console.log("click li");
+                            //Доделать ответ по клику
+                            //window.location.href = "chat.html?ToUser=" + msg[i].get("ToUser");
+                        }
+                        var liText = document.createTextNode(author);
+                        span.appendChild(liText);
+                        var pText = document.createTextNode(text);
+                        p.appendChild(pText);
+
+                        var spanDate = document.createElement("span");
+                        spanDate.className = "shoutbox-comment-ago";
+                        var dateText = document.createTextNode(date);
+                        spanDate.appendChild(dateText);
+
+                        li.appendChild(span);
+                        li.appendChild(p);
+                        li.appendChild(spanDate);
+
+                        articleDiv.appendChild(li);
+
+                    }
+                    msgBuffer = array.length;
+                }
+                console.log(array.length);
+            }
+        })
+    }, 1500);
+}
+
+
+
+
+interval();
 
 // $('.msg_form').on('submit', function (e) {
 
