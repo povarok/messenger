@@ -1,9 +1,11 @@
 $(function () {
 
     Parse.$ = jQuery;
-    Parse.serverURL = "https://pg-app-ae2ym6gds1wddidtsydys97dwtryhv.scalabl.cloud/1/";
-    Parse.initialize("mo33TVQ1g7F71UwmrXc64ExDQjOj9OPkSUEWT5i7", "5XHK2sMNkkDbnswmMmQ07qtaPj7Ea4RiOORWU9lT");
-
+    Parse.serverURL = "https://pg-app-87e2afuylh07dcx9yvl4lp0ludceiy.scalabl.cloud/1/";
+    Parse.initialize(
+        "H0c8Nc9VB629EZp1hWypOUdISnpepF76kkiMCP9j",
+        "jPsorL0c2TSoUXS65zE6ygO1ke7eaPpjFkCJUSpE"
+      );
     Parse.User.enableUnsafeCurrentUser()
     var currentUser = Parse.User.current();
     if (currentUser) {
