@@ -172,65 +172,119 @@ $(function () {
     // }                       // Append the text to <button>
     // document.body.appendChild(btn); 
 
-    function getAllChats() {
-
-        //Основной элемент для заполнения
+    function create_dialogs(final_dict) {
+        var iterator = Object.keys(final_dict);
         var articleDiv = document.querySelector("ul.shoutbox-content");
         articleDiv.innerHTML = "";
+        for (let k = 0; k < iterator.length; k++) {
+
+            var p = document.createElement("p");
+            p.className = "shoutbox-comment";
+            //Здесь будет цикл, но его пока нету:)
+            var li = document.createElement("li");
+            var span = document.createElement("span")
+            span.className = "shoutbox-username";
+            li.className = "liClass";
+            li.onclick = function () {
+                window.location.href = "chat.html?Recipient=" + iterator[k];
+            }
+            var liText = document.createTextNode('Dialog with:    ' + iterator[k]);
+            span.appendChild(liText);
+            var br = document.createElement("br");
+            span.appendChild(br);
+            var fromUserText = document.createTextNode(final_dict[iterator[k]][2] + ': ');
+            p.appendChild(fromUserText);
+            var pText = document.createTextNode(final_dict[iterator[k]][0]);
+            p.appendChild(pText);
+            var spanDate = document.createElement("span");
+            spanDate.className = "shoutbox-comment-ago";
+            var options = {
+                year: "numeric", month: "short",
+                day: "numeric", hour: "2-digit", minute: "2-digit"
+            };
+            var tme = final_dict[iterator[k]][1]
+            var dateText = document.createTextNode(tme.toLocaleTimeString("en-us", options));
+            spanDate.appendChild(dateText);
+            li.appendChild(span);
+            li.appendChild(p);
+            li.appendChild(spanDate);
+            articleDiv.appendChild(li);
+        }
+
+    }
+
+    function getAllChats() {
+        console.log("getAllChats started");
+        var final_dict = {};
+        var UserName_dict = new Object();
+        var ToUser_dict = new Object();
 
         var Chat = Parse.Object.extend("Chat");
         var dateQuery = new Parse.Query(Chat);
         dateQuery.equalTo("sender", username);
-        dateQuery.descending("updatedAt");
-        dateQuery.limit(50);
+
         dateQuery.find({
-            success: function (msg) {
 
-                for (let i = 0; i < msg.length; i++) {
-                    console.log("msg[i].get() " + msg[i]);
+            success: function (UserName1) {
 
-
-                    var p = document.createElement("p");
-                    p.className = "shoutbox-comment";
-                    //Здесь будет цикл, но его пока нету:)
-                    var li = document.createElement("li");
-                    // li.onmouseenter="style"
-                    var span = document.createElement("span")
-                    span.className = "shoutbox-username";
-                    li.className = "liClass";
-                    li.onclick = function (params) {
-
-                        window.location.href = "chat.html?Recipient=" + msg[i].get("recipient");
-                    }
-                    var liText = document.createTextNode(msg[i].get("recipient"));
-                    span.appendChild(liText);
-
-                    console.log(msg[i].get("messages")[msg[i].get("messages").length - 1]["text"]);
-
-                    var pText = document.createTextNode(msg[i].get("messages")[msg[i].get("messages").length - 1]["text"]);
-                    p.appendChild(pText);
-
-                    var spanDate = document.createElement("span");
-                    spanDate.className = "shoutbox-comment-ago";
-                    var options = {
-                        year: "numeric", month: "short",
-                        day: "numeric", hour: "2-digit", minute: "2-digit"
-                    };
-                    var dateText = document.createTextNode(msg[i].get("updatedAt").toLocaleTimeString("en-us", options));
-
-                    console.log(dateText);
-                    spanDate.appendChild(dateText);
-
-                    li.appendChild(span);
-                    li.appendChild(p);
-                    li.appendChild(spanDate);
-
-                    articleDiv.appendChild(li);
+                UserName_dict = new Object();
+                for (let i = 0; i < UserName1.length; i++) {
+                    var arr = [UserName1[i].get('Messages'), UserName1[i].get('createdAt'), UserName1[i].get('sender')];
+                    UserName_dict[UserName1[i].get('recipient')] = arr;
                 }
+                dateQuery = new Parse.Query(Chat);
+                dateQuery.equalTo("recipient", username);
+                dateQuery.find({
+                    success: function (ToUser) {
+                        for (let i = 0; i < ToUser.length; i++) {
+                            var arr = [ToUser[i].get('Messages'), ToUser[i].get('createdAt'), ToUser[i].get('sender')];
+                            ToUser_dict[ToUser[i].get('sender')] = arr;
+                        }
+                        
+                        keys1 = Object.keys(UserName_dict);
+                        keys2 = Object.keys(ToUser_dict);
+                        
+                        if (keys1.length > keys2.length) {
+                            
+                            for (let i = 0; i < keys1.length; i++) {
+
+                                var check = false
+                                if (ToUser_dict[keys1[i]] == undefined) {
+                                    final_dict[keys1[i]] = UserName_dict[keys1[i]];
+                                    check = true;
+                                }
+                                if (check == false && UserName_dict[keys1[i]][1] > ToUser_dict[keys1[i]][1]) {
+                                    final_dict[keys1[i]] = UserName_dict[keys1[i]];
+                                }
+                                else if (check == false) {
+                                    final_dict[keys1[i]] = ToUser_dict[keys1[i]];
+                                }
+                            }
+                            create_dialogs(final_dict);
+                        }
+                        else {
+                            for (let i = 0; i < keys2.length; i++) {
+                                var check = false
+                                if (UserName_dict[keys2[i]] == undefined) {
+
+                                    final_dict[keys2[i]] = ToUser_dict[keys2[i]];                                  
+                                    check = true;
+                                }
+
+                                if (check == false && UserName_dict[keys2[i]][1] > ToUser_dict[keys2[i]][1]) {
+
+                                    final_dict[keys2[i]] = UserName_dict[keys2[i]];
+                                }
+                                else if (check == false) {
+                                    final_dict[keys2[i]] = ToUser_dict[keys2[i]];
+                                }
+                            }
+                            create_dialogs(final_dict);
+                        }
+                    }
+                })
             }
-
-
-        });
+        })
     }
 // выставляем обновление диалогов раз в минуту
     function interval() {

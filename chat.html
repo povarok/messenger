@@ -33,9 +33,11 @@
 
                     <div class="about">
                         <input class="btn btn-primary" type="button" id="add_recipient" value="Да">
+                        
                     </div>
                     <div class="about">
                         <input class="form-control" type="text" id="recipient_input" placeholder="Enter username. . .">
+                        <div id="search_advice_wrapper"></div>
                     </div>
 
                 </div>
@@ -50,6 +52,7 @@
                             </div>
                             <div class="about">
                                 <input class="form-control" type="text" id="msg_text" placeholder="Enter your message. . .">
+                                <input class="btn btn-default btn-file" type="file" id="profilePhotoFileUpload">
                             </div>
                         </div>
                     </h1>
@@ -59,7 +62,20 @@
 
     </form>
 
+    <div id="win" style="display:none;">
+        <div class="overlay"></div>
+           <div class="visible">
+             <h2>Заголовок окна</h2>
+               <div class="content">
+                 <p>
+                     <img src = 'images/empty_user.jpg' id="bigger_image">
 
+                 </p>
+                 <p></p>
+               </div>
+             <button type="button" onClick="getElementById('win').style.display='none';">закрыть</button>
+         </div>
+     </div>
  
 
     <div class="shoutbox">
@@ -77,6 +93,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="js/parse.js"></script>
     <script src="js/chat.js"></script>
+  
 </body>
 
 </html>
